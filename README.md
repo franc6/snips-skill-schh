@@ -15,6 +15,6 @@ note the following:
 2. The device it should have been sent to
 3. The device it did send the command to
 4. The ID of the activity that was active
-5. A dump of the activities and devices configuration (python3 -m aioharmony -h &lt;remotename&gt; show_config)
+5. A dump of the activities and devices configuration (python3 -m pyharmony --harmony_ip &lt;remotename&gt; show_config)
 
 
