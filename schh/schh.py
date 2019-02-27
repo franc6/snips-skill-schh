@@ -108,7 +108,12 @@ class SmartCommandsHarmonyHub:
             print("current activity is the same as what was requested, doing nothing")
             return -1
 
-        activity = [x for x in self.config["activity"] if x["label"] == activity_name][0]
+        activities = [x for x in self.config["activity"] if x["label"] == activity_name]
+        if activities is None:
+            print("Cannot find the activity: {} ".format(activity_name))
+            return -1
+        activity = activities[0]
+
         if type(activity) is dict:
             activity_id = activity["id"]
         return_value = self.harmony.start_activity(activity_id)
