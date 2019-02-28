@@ -93,6 +93,8 @@ def main(hermes):
           .subscribe_intent("franc:harmony_hub_power_on", power_on) \
           .loop_forever()
 
+    print "loop_forever returned!"
+
 if __name__ == "__main__":
     with Hermes("localhost:1883") as h:
         main(h)
