@@ -24,6 +24,21 @@ def read_configuration_file(file_name):
     except (IOError, configparser.Error):
         return dict()
 
+def change_channel(hermes, intent_message):
+    """Handles intent for changing the volume"""
+    channel_slot = None
+    repeat = 1
+    for (slot_value, slot) in intent_message.slots.items():
+        if slot_value == "channel":
+            channel_slot = slot[0].slot_value.value.value)
+
+    if channel_slot is None:
+        hermes.publish_end_session(intent_message.session_id,
+            "I did not change the channel with the Harmony Hub.")
+        return
+
+    hermes.skill.change_channel(channel_slot)
+
 def change_volume(hermes, intent_message):
     """Handles intent for changing the volume"""
     which_command = None
@@ -91,6 +106,7 @@ def main(hermes):
     hermes.subscribe_intent("franc:harmony_hub_volume", change_volume) \
           .subscribe_intent("franc:harmony_hub_send_command", send_command) \
           .subscribe_intent("franc:harmony_hub_power_on", power_on) \
+          .subscribe_intent("franc:harmony_hub_change_channel", change_channel) \
           .loop_forever()
 
     print("loop_forever returned!")

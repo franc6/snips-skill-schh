@@ -65,6 +65,9 @@ class SmartCommandsHarmonyHub:
             elif "roles" in act.keys() and "VolumeActivityRole" in act["roles"].keys():
                 self.volume_device = act["roles"]["VolumeActivityRole"]
 
+    def _get_channel_separator(self):
+        return "."
+
     def _get_device_for_command(self, command):
         self._get_devices_for_activity()
         if (command == "VolumeUp") or (command == "VolumeDown") or (command == "Mute"):
@@ -84,10 +87,35 @@ class SmartCommandsHarmonyHub:
         payload = {"operations": operations}
         return json.dumps(payload)
 
+    def change_channel(self, channel_slot):
+        """Changes to the specified channel, being sure that if digital
+        channels are used, that it uses the correct separator style.
+        """
+        which_channel = ""
+        dot_reached = False
+        sub_channel = 0
+        for idx in range(len(channel_slot)):
+            if channel_slot[idx].isdigit() and not dot_reached:
+                which_channel += channel_slot[idx]
+            elif channel_slot[idx] == "." or channel_slot[idx] == ",":
+                which_channel += self._get_channel_separator()
+                dot_reached = True
+                idx += 1
+                break
+
+        if dot_reached:
+            sub_channel = int(channel_slot[idx])
+            if int(channel_slot[idx+1]) >= 5:
+                sub_channel += 1
+            which_channel += str(sub_channel)
+        self._connect()
+        self.harmony.change_channel(which_channel)
+        self._close()
+        return
+
     def send_command(self, command, repeat):
         """Sends command to the Harmony Hub repeat times"""
         self._connect()
-        send_commands = []
         device = self._get_device_for_command(command)
         for _ in range(repeat):
             self.harmony.send_command(device, command, 0.1)
