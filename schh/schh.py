@@ -104,10 +104,12 @@ class SmartCommandsHarmonyHub:
                 break
 
         if dot_reached:
-            sub_channel = int(channel_slot[idx])
-            if int(channel_slot[idx+1]) >= 5:
-                sub_channel += 1
-            which_channel += str(sub_channel)
+            if len(channel_slot) > idx:
+                sub_channel = int(channel_slot[idx])
+                if len(channel_slot) > idx+1 and int(channel_slot[idx+1]) >= 5:
+                    sub_channel += 1
+                which_channel += str(sub_channel)
+
         self._connect()
         self.harmony.change_channel(which_channel)
         self._close()
