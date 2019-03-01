@@ -29,7 +29,7 @@ def change_channel(hermes, intent_message):
     channel_slot = None
     repeat = 1
     for (slot_value, slot) in intent_message.slots.items():
-        if slot_value == "channel":
+        if slot_value == "channel_number":
             channel_slot = slot[0].slot_value.value.value
 
     if channel_slot is None:
