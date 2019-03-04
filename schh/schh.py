@@ -16,7 +16,8 @@ class SmartCommandsHarmonyHub:
         self.volume_device = -1
         self.activity_id = -1
         self.activity_name = "Power Off"
-        self._connect()
+        if self._connect():
+            self.harmony.disconnect()
 
     def _reset_state_info(self):
         """Resets state-related members to their defaults"""
@@ -33,12 +34,22 @@ class SmartCommandsHarmonyHub:
 
     def _connect(self):
         """Connects to the Harmony Hub"""
-        self.harmony = harmony_client.create_and_connect_client(self.remote_address, 5222)
-        self.config = self.harmony.get_config()
-        self.activity_id = self.harmony.get_current_activity()
-        activity = [x for x in self.config["activity"] if int(x["id"]) == self.activity_id][0]
-        if type(activity) is dict:
-            self.activity_name = activity["label"]
+        try:
+            self.harmony = harmony_client.create_and_connect_client(self.remote_address, 5222)
+            if not self.harmony:
+                self.harmony = None
+                print("Failed to connect to Harmony Hub!")
+                return False
+            self.config = self.harmony.get_config()
+            self.activity_id = self.harmony.get_current_activity()
+            activity = [x for x in self.config["activity"] if int(x["id"]) == self.activity_id][0]
+            if type(activity) is dict:
+                self.activity_name = activity["label"]
+            return True
+        except as e:
+            print("Caught exception while connecting!")
+            print(e)
+        return False
 
     def _get_devices_for_activity(self):
         """Gets the main and volume devices for the current activity"""
@@ -110,38 +121,42 @@ class SmartCommandsHarmonyHub:
                     sub_channel += 1
                 which_channel += str(sub_channel)
 
-        self._connect()
+        if not self._connect():
+            return False
         self.harmony.change_channel(which_channel)
         self._close()
-        return
+        return True
 
     def send_command(self, command, repeat):
         """Sends command to the Harmony Hub repeat times"""
-        self._connect()
+        if not self._connect():
+            return False
         device = self._get_device_for_command(command)
         for _ in range(repeat):
             self.harmony.send_command(device, command, 0.1)
         self._close()
-        return
+        return True
 
     def current_activity(self):
         """Returns the ID and name of the current activity"""
-        self._connect()
+        if not self._connect():
+            return False
         return_values = (self.activity_id, self.activity_name)
         self._close()
         return return_values
 
     def start_activity(self, activity_name):
         """Starts an activity on the Harmony Hub"""
-        self._connect()
+        if not self._connect():
+            return -1
         if activity_name == self.activity_name:
             print("current activity is the same as what was requested, doing nothing")
-            return -1
+            return -2
 
         activities = [x for x in self.config["activity"] if x["label"] == activity_name]
         if activities is None:
             print("Cannot find the activity: {} ".format(activity_name))
-            return -1
+            return -3
         activity = activities[0]
 
         if type(activity) is dict:
@@ -156,7 +171,8 @@ class SmartCommandsHarmonyHub:
 
     def inject_activities(self):
         """Injects the list of activities known to the Harmony Hub"""
-        self._connect()
+        if not self._connect():
+            return False
         payload = self._get_update_payload() + "\n"
         pipe = Popen(["/usr/bin/mosquitto_pub",
                       "-t",
@@ -168,5 +184,6 @@ class SmartCommandsHarmonyHub:
                      stderr=STDOUT)
         pipe.communicate(input=payload.encode("utf-8"))
         self._close()
+        return True
 
 __all__ = ["SmartCommandsHarmonyHub"]

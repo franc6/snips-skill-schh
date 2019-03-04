@@ -37,7 +37,9 @@ def change_channel(hermes, intent_message):
             "I did not change the channel with the Harmony Hub.")
         return
 
-    hermes.skill.change_channel(channel_slot)
+    if not hermes.skill.change_channel(channel_slot):
+        hermes.publish_end_session(intent_message.session_id,
+            "I could not connect to the Harmony Hub.")
 
 def change_volume(hermes, intent_message):
     """Handles intent for changing the volume"""
@@ -54,7 +56,9 @@ def change_volume(hermes, intent_message):
             "I did not change the volume with the Harmony Hub.")
         return
 
-    hermes.skill.send_command(which_command, repeat)
+    if not hermes.skill.send_command(which_command, repeat):
+        hermes.publish_end_session(intent_message.session_id,
+            "I could not connect to the Harmony Hub.")
 
 def send_command(hermes, intent_message):
     """Handles intent for sending a command"""
@@ -71,7 +75,9 @@ def send_command(hermes, intent_message):
             "I did not send a command to the Harmony Hub.")
         return
 
-    hermes.skill.send_command(which_command, repeat)
+    if not hermes.skill.send_command(which_command, repeat):
+        hermes.publish_end_session(intent_message.session_id,
+            "I could not connect to the Harmony Hub.")
 
 def power_on(hermes, intent_message):
     """Handles intent for power on (starting an activity)"""
@@ -91,7 +97,11 @@ def power_on(hermes, intent_message):
     if ret == 1:
         sentence = "I started the {} activity on the Harmony Hub.".format(activity)
     elif ret == -1:
+        sentence = "I could not connect to the Harmony Hub."
+    elif ret == -2:
         sentence = "The {} activity is already started on the Harmony Hub.".format(activity)
+    elif ret == -3:
+        sentence = "I don't know how to start the {} activity.".format(activity)
     else:
         sentence = "I failed to started the {} activity on the Harmony Hub.".format(activity)
     hermes.publish_end_session(intent_message.session_id, sentence)
