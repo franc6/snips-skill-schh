@@ -28,9 +28,10 @@ def change_channel(hermes, intent_message):
     """Handles intent for changing the volume"""
     channel_slot = None
     repeat = 1
-    for (slot_value, slot) in intent_message.slots.items():
-        if slot_value == "channel_number":
-            channel_slot = str(slot[0].slot_value.value.value)
+    if intent_message.slots is not None:
+        for (slot_value, slot) in intent_message.slots.items():
+            if slot_value == "channel_number":
+                channel_slot = str(slot[0].slot_value.value.value)
 
     if channel_slot is None:
         hermes.publish_end_session(intent_message.session_id,
@@ -45,11 +46,12 @@ def change_volume(hermes, intent_message):
     """Handles intent for changing the volume"""
     which_command = None
     repeat = 1
-    for (slot_value, slot) in intent_message.slots.items():
-        if slot_value == "updownmute":
-            which_command = slot[0].slot_value.value.value
-        elif slot_value == "repeat":
-            repeat = int(float(slot[0].slot_value.value.value))
+    if intent_message.slots is not None:
+        for (slot_value, slot) in intent_message.slots.items():
+            if slot_value == "updownmute":
+                which_command = slot[0].slot_value.value.value
+            elif slot_value == "repeat":
+                repeat = int(float(slot[0].slot_value.value.value))
 
     if which_command is None:
         hermes.publish_end_session(intent_message.session_id,
