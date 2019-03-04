@@ -46,7 +46,7 @@ class SmartCommandsHarmonyHub:
             if type(activity) is dict:
                 self.activity_name = activity["label"]
             return True
-        except as e:
+        except Error as e:
             print("Caught exception while connecting!")
             print(e)
         return False
