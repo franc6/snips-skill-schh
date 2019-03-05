@@ -104,37 +104,37 @@ class SmartCommandsHarmonyHub:
                 for fncn in cgroups["function"]:
                     if fncn["label"] == "0":
                         commands.append("zero")
-                        command_map["zero"] = fncn["name"]
+                        self.command_map["zero"] = fncn["name"]
                     elif fncn["label"] == "1":
                         commands.append("one")
-                        command_map["one"] = fncn["name"]
+                        self.command_map["one"] = fncn["name"]
                     elif fncn["label"] == "2":
                         commands.append("two")
-                        command_map["two"] = fncn["name"]
+                        self.command_map["two"] = fncn["name"]
                     elif fncn["label"] == "3":
                         commands.append("three")
-                        command_map["three"] = fncn["name"]
+                        self.command_map["three"] = fncn["name"]
                     elif fncn["label"] == "4":
                         commands.append("four")
-                        command_map["four"] = fncn["name"]
+                        self.command_map["four"] = fncn["name"]
                     elif fncn["label"] == "5":
                         commands.append("five")
-                        command_map["five"] = fncn["name"]
+                        self.command_map["five"] = fncn["name"]
                     elif fncn["label"] == "6":
                         commands.append("six")
-                        command_map["six"] = fncn["name"]
+                        self.command_map["six"] = fncn["name"]
                     elif fncn["label"] == "7":
                         commands.append("seven")
-                        command_map["seven"] = fncn["name"]
+                        self.command_map["seven"] = fncn["name"]
                     elif fncn["label"] == "8":
                         commands.append("eight")
-                        command_map["eight"] = fncn["name"]
+                        self.command_map["eight"] = fncn["name"]
                     elif fncn["label"] == "9":
                         commands.append("nine")
-                        command_map["nine"] = fncn["name"]
+                        self.command_map["nine"] = fncn["name"]
                     else:
                         commands.append(fncn["label"])
-                        command_map[fncn["label"]] = fncn["name"]
+                        self.command_map[fncn["label"]] = fncn["name"]
 
         operations.append(self._get_activities_payload(activities))
         operations.append(self._get_commands_payload(commands))
