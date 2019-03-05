@@ -16,6 +16,7 @@ class SmartCommandsHarmonyHub:
         self.volume_device = -1
         self.activity_id = -1
         self.activity_name = "Power Off"
+        self.command_map = []
         if self._connect():
             self.harmony.disconnect()
 
@@ -26,6 +27,7 @@ class SmartCommandsHarmonyHub:
         self.volume_device = -1
         self.activity_id = -1
         self.activity_name = "Power Off"
+        self.command_map = []
 
     def _close(self):
         """Closes the connectoion to the Harmony Hub"""
@@ -85,18 +87,65 @@ class SmartCommandsHarmonyHub:
             return self.volume_device
         return self.main_device
 
+    def _get_commands_payload(self, commands):
+        return ["addFromVanilla", {"harmony_hub_command": commands}]
+
     def _get_activities_payload(self, activities):
         return ["addFromVanilla", {"harmony_hub_activities_name": activities}]
 
     def _get_update_payload(self):
         operations = []
         activities = []
+        commands = []
+        self.command_map = []
         for activity in self.config["activity"]:
             activities.append(activity["label"])
+            for cgroups in activity["controlGroup"]:
+                for fncn in cgroups["function"]:
+                    if fncn["label"] == "0":
+                        commands.append("zero")
+                        command_map["zero"] = fncn["name"]
+                    elif fncn["label"] == "1":
+                        commands.append("one")
+                        command_map["one"] = fncn["name"]
+                    elif fncn["label"] == "2":
+                        commands.append("two")
+                        command_map["two"] = fncn["name"]
+                    elif fncn["label"] == "3":
+                        commands.append("three")
+                        command_map["three"] = fncn["name"]
+                    elif fncn["label"] == "4":
+                        commands.append("four")
+                        command_map["four"] = fncn["name"]
+                    elif fncn["label"] == "5":
+                        commands.append("five")
+                        command_map["five"] = fncn["name"]
+                    elif fncn["label"] == "6":
+                        commands.append("six")
+                        command_map["six"] = fncn["name"]
+                    elif fncn["label"] == "7":
+                        commands.append("seven")
+                        command_map["seven"] = fncn["name"]
+                    elif fncn["label"] == "8":
+                        commands.append("eight")
+                        command_map["eight"] = fncn["name"]
+                    elif fncn["label"] == "9":
+                        commands.append("nine")
+                        command_map["nine"] = fncn["name"]
+                    else:
+                        commands.append(fncn["label"])
+                        command_map[fncn["label"]] = fncn["name"]
 
         operations.append(self._get_activities_payload(activities))
+        operations.append(self._get_commands_payload(commands))
         payload = {"operations": operations}
         return json.dumps(payload)
+
+    def _map_command(self, command):
+        """Maps from a command label to a command"""
+        if command in self.command_map.keys():
+            return self.command_map[command]
+        return command
 
     def change_channel(self, channel_slot):
         """Changes to the specified channel, being sure that if digital
@@ -131,6 +180,7 @@ class SmartCommandsHarmonyHub:
         """Sends command to the Harmony Hub repeat times"""
         if not self._connect():
             return False
+        command = self._map_command(command)
         device = self._get_device_for_command(command)
         for _ in range(repeat):
             self.harmony.send_command(device, command, 0.1)
