@@ -16,7 +16,7 @@ class SmartCommandsHarmonyHub:
         self.volume_device = -1
         self.activity_id = -1
         self.activity_name = "Power Off"
-        self.command_map = []
+        self.command_map = {}
         if self._connect():
             self.harmony.disconnect()
 
@@ -27,7 +27,7 @@ class SmartCommandsHarmonyHub:
         self.volume_device = -1
         self.activity_id = -1
         self.activity_name = "Power Off"
-        self.command_map = []
+        self.command_map = {}
 
     def _close(self):
         """Closes the connectoion to the Harmony Hub"""
@@ -97,7 +97,7 @@ class SmartCommandsHarmonyHub:
         operations = []
         activities = []
         commands = []
-        self.command_map = []
+        self.command_map = {}
         for activity in self.config["activity"]:
             activities.append(activity["label"])
             for cgroups in activity["controlGroup"]:
