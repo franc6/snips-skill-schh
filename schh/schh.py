@@ -133,18 +133,23 @@ class SmartCommandsHarmonyHub:
                         commands.append("nine")
                         self.command_map["nine"] = fncn["name"]
                     else:
+                        label_key = self._label_to_key(fncn["label"])
                         commands.append(fncn["label"])
-                        self.command_map[fncn["label"]] = fncn["name"]
+                        self.command_map[label_key] = fncn["name"]
 
         operations.append(self._get_activities_payload(activities))
         operations.append(self._get_commands_payload(commands))
         payload = {"operations": operations}
         return json.dumps(payload)
 
+    def _label_to_key(self, label):
+        return label.lower().replace(" ", "_")
+
     def _map_command(self, command):
         """Maps from a command label to a command"""
-        if command in self.command_map.keys():
-            return self.command_map[command]
+        label_key = self._label_to_key(command)
+        if label_key in self.command_map.keys():
+            return self.command_map[label_key]
         return command
 
     def change_channel(self, channel_slot):
