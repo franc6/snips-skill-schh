@@ -40,9 +40,6 @@ def change_channel(hermes, intent_message):
     if intent_message.slots is not None:
         if intent_message.slots.channel_number:
             channel_slot = str(intent_message.slots.channel_number[0].slot_value.value.value)
-        #for (slot_value, slot) in intent_message.slots.items():
-            #if slot_value == "channel_number":
-                #channel_slot = str(slot[0].slot_value.value.value)
 
     if channel_slot is None:
         hermes.publish_end_session(intent_message.session_id,
@@ -62,11 +59,6 @@ def change_volume(hermes, intent_message):
             which_command = intent_message.slots.updownmute[0].slot_value.value.value
         if intent_message.slots.repeat:
             repeat = int(float(intent_message.slots.repeat[0].slot_value.value.value))
-        #for (slot_value, slot) in intent_message.slots.items():
-            #if slot_value == "updownmute":
-                #which_command = slot[0].slot_value.value.value
-            #elif slot_value == "repeat":
-                #repeat = int(float(slot[0].slot_value.value.value))
 
     if which_command is None:
         hermes.publish_end_session(intent_message.session_id,
@@ -84,11 +76,6 @@ def send_command(hermes, intent_message):
             which_command = intent_message.slots.command[0].slot_value.value.value
         if intent_message.slots.repeat:
             repeat = int(float(intent_message.slots.repeat[0].slot_value.value.value))
-    #for (slot_value, slot) in intent_message.slots.items():
-        #if slot_value == "command":
-            #which_command = slot[0].slot_value.value.value
-        #elif slot_value == "repeat":
-            #repeat = int(float(slot[0].slot_value.value.value))
 
     if which_command is None:
         hermes.publish_end_session(intent_message.session_id,
@@ -100,9 +87,9 @@ def send_command(hermes, intent_message):
 def power_on(hermes, intent_message):
     """Handles intent for power on (starting an activity)"""
     activity = None
-    for (slot_value, slot) in intent_message.slots.items():
-        if slot_value == "activity":
-            activity = slot[0].slot_value.value.value
+    if intent_message.slots is not None:
+        if intent_message.slots.activity:
+            activity = intent_message.slots.activity[0].slot_value.value.value
 
     print("Received power_on intent")
     if activity is None:
