@@ -12,8 +12,6 @@ class SmartCommandsHarmonyHub:
         """
         self.remote_address = remote_address
         self.config = None
-        self.main_device = -1
-        self.volume_device = -1
         self.activity_id = -1
         self.activity_name = "Power Off"
         self.command_map = {}
@@ -23,8 +21,6 @@ class SmartCommandsHarmonyHub:
     def _reset_state_info(self):
         """Resets state-related members to their defaults"""
         self.config = None
-        self.main_device = -1
-        self.volume_device = -1
         self.activity_id = -1
         self.activity_name = "Power Off"
         self.command_map = {}
@@ -53,39 +49,8 @@ class SmartCommandsHarmonyHub:
             print(e)
         return False
 
-    def _get_devices_for_activity(self):
-        """Gets the main and volume devices for the current activity"""
-        self.main_device = -1
-        self.volume_device = -1
-        if self.activity_id == -1:
-            return
-
-        act = next((x for x in self.config["activity"]
-                    if x["label"] == self.activity_name), None)
-        if act is not None:
-            #print(json.dumps(act, indent=4, separators=(",", ": ")))
-            if "ChannelChangingActivityRole" in act.keys():
-                self.main_device = act["ChannelChangingActivityRole"]
-            elif "roles" in act.keys() and "ChannelChangingActivityRole" in act["roles"].keys():
-                self.main_device = act["roles"]["ChannelChangingActivityRole"]
-            elif "roles" in act.keys() and "PlayMediaActivityRole" in act["roles"].keys():
-                self.main_device = act["roles"]["PlayMediaActivityRole"]
-            elif "roles" in act.keys() and "PlayMovieActivityRole" in act["roles"].keys():
-                self.main_device = act["roles"]["PlayMovieActivityRole"]
-
-            if "VolumeActivityRole" in act.keys():
-                self.volume_device = act["VolumeActivityRole"]
-            elif "roles" in act.keys() and "VolumeActivityRole" in act["roles"].keys():
-                self.volume_device = act["roles"]["VolumeActivityRole"]
-
     def _get_channel_separator(self):
         return "."
-
-    def _get_device_for_command(self, command):
-        self._get_devices_for_activity()
-        if (command == "VolumeUp") or (command == "VolumeDown") or (command == "Mute"):
-            return self.volume_device
-        return self.main_device
 
     def _get_commands_payload(self, commands):
         return ["addFromVanilla", {"harmony_hub_command": commands}]
@@ -102,55 +67,48 @@ class SmartCommandsHarmonyHub:
             activities.append(activity["label"])
             for cgroups in activity["controlGroup"]:
                 for fncn in cgroups["function"]:
-                    if fncn["label"] == "0":
-                        commands.append("zero")
-                        self.command_map["zero"] = fncn["name"]
-                    elif fncn["label"] == "1":
-                        commands.append("one")
-                        self.command_map["one"] = fncn["name"]
-                    elif fncn["label"] == "2":
-                        commands.append("two")
-                        self.command_map["two"] = fncn["name"]
-                    elif fncn["label"] == "3":
-                        commands.append("three")
-                        self.command_map["three"] = fncn["name"]
-                    elif fncn["label"] == "4":
-                        commands.append("four")
-                        self.command_map["four"] = fncn["name"]
-                    elif fncn["label"] == "5":
-                        commands.append("five")
-                        self.command_map["five"] = fncn["name"]
-                    elif fncn["label"] == "6":
-                        commands.append("six")
-                        self.command_map["six"] = fncn["name"]
-                    elif fncn["label"] == "7":
-                        commands.append("seven")
-                        self.command_map["seven"] = fncn["name"]
-                    elif fncn["label"] == "8":
-                        commands.append("eight")
-                        self.command_map["eight"] = fncn["name"]
-                    elif fncn["label"] == "9":
-                        commands.append("nine")
-                        self.command_map["nine"] = fncn["name"]
-                    else:
-                        label_key = self._label_to_key(fncn["label"])
-                        commands.append(fncn["label"])
-                        self.command_map[label_key] = fncn["name"]
+                    (label_key, voice_command) = self._label_to_key_and_voice_command(fncn["label"], activity["id"])
+                    commands.append(voice_command)
+                    self.command_map[label_key] = {}
+                    self.command_map[label_key]["command"] = fncn["name"]
+                    self.command_map[label_key]["device"] = fncn["action"]["deviceId"]
 
         operations.append(self._get_activities_payload(activities))
         operations.append(self._get_commands_payload(commands))
         payload = {"operations": operations}
         return json.dumps(payload)
 
-    def _label_to_key(self, label):
-        return label.lower().replace(" ", "_")
+    def _label_to_key_and_voice_command(self, label, activity):
+        if label == "0":
+            label = "zero"
+        elif label == "1":
+            label = "one"
+        elif label == "2":
+            label = "two"
+        elif label == "3":
+            label = "three"
+        elif label == "4":
+            label = "four"
+        elif label == "5":
+            label = "five"
+        elif label == "6":
+            label = "six"
+        elif label == "7":
+            label = "seven"
+        elif label == "8":
+            label = "eight"
+        elif label == "9":
+            label = "nine"
+
+        voice_command = label
+        return (activity + "_" + label.lower().replace(" ", "_"), voice_command)
 
     def _map_command(self, command):
         """Maps from a command label to a command"""
-        label_key = self._label_to_key(command)
+        label_key = self._label_to_key_and_voice_command(command, str(self.activity_id))[0]
         if label_key in self.command_map.keys():
             return self.command_map[label_key]
-        return command
+        return None
 
     def change_channel(self, channel_slot):
         """Changes to the specified channel, being sure that if digital
@@ -184,13 +142,14 @@ class SmartCommandsHarmonyHub:
     def send_command(self, command, repeat):
         """Sends command to the Harmony Hub repeat times"""
         if not self._connect():
-            return False
-        command = self._map_command(command)
-        device = self._get_device_for_command(command)
+            return 0
+        mapped_command = self._map_command(command)
+        if mapped_command is None:
+            return -1
         for _ in range(repeat):
-            self.harmony.send_command(device, command, 0.1)
+            self.harmony.send_command(mapped_command["device"], mapped_command["command"], 0.1)
         self._close()
-        return True
+        return 1
 
     def current_activity(self):
         """Returns the ID and name of the current activity"""

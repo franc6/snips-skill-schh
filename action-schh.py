@@ -24,6 +24,15 @@ def read_configuration_file(file_name):
     except (IOError, configparser.Error):
         return dict()
 
+def _send_command(hermes, intent_message, which_command, repeat):
+    ret = hermes.skill.send_command(which_command, repeat)
+    if ret == 0:
+        hermes.publish_end_session(intent_message.session_id,
+            "I could not connect to the Harmony Hub.")
+    elif ret == -1:
+        hermes.publish_end_session(intent_message.session_id,
+            "I could not determine what command to send to the Harmony Hub.")
+
 def change_channel(hermes, intent_message):
     """Handles intent for changing the volume"""
     channel_slot = None
@@ -58,9 +67,7 @@ def change_volume(hermes, intent_message):
             "I did not change the volume with the Harmony Hub.")
         return
 
-    if not hermes.skill.send_command(which_command, repeat):
-        hermes.publish_end_session(intent_message.session_id,
-            "I could not connect to the Harmony Hub.")
+    _send_command(hermes, intent_message, which_command, repeat)
 
 def send_command(hermes, intent_message):
     """Handles intent for sending a command"""
@@ -77,9 +84,7 @@ def send_command(hermes, intent_message):
             "I did not send a command to the Harmony Hub.")
         return
 
-    if not hermes.skill.send_command(which_command, repeat):
-        hermes.publish_end_session(intent_message.session_id,
-            "I could not connect to the Harmony Hub.")
+    _send_command(hermes, intent_message, which_command, repeat)
 
 def power_on(hermes, intent_message):
     """Handles intent for power on (starting an activity)"""
