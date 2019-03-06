@@ -78,6 +78,7 @@ class SmartCommandsHarmonyHub:
                     else:
                         idx += 11
                     self.command_map[label_key]["device"] = fncn["action"][idx:ridx]
+                    print("Saved command for key: " + label_key)
 
         operations.append(self._get_activities_payload(activities))
         operations.append(self._get_commands_payload(list(set(commands))))
@@ -85,6 +86,7 @@ class SmartCommandsHarmonyHub:
         return json.dumps(payload)
 
     def _label_to_key_and_voice_command(self, label, activity):
+        print("Getting key for label: " + label + " and activity: " + activity)
         if label == "0":
             label = "zero"
         elif label == "1":
@@ -107,13 +109,16 @@ class SmartCommandsHarmonyHub:
             label = "nine"
 
         voice_command = label
+        print ("returning key: " + activity + "_" + label.lower().replace(" ", "_"), voice_command)
         return (activity + "_" + label.lower().replace(" ", "_"), voice_command)
 
     def _map_command(self, command):
         """Maps from a command label to a command"""
+        print("Getting command_map entry for: " + command)
         label_key = self._label_to_key_and_voice_command(command, str(self.activity_id))[0]
         if label_key in self.command_map.keys():
             return self.command_map[label_key]
+        print("Could not find the entry!")
         return None
 
     def change_channel(self, channel_slot):
