@@ -74,7 +74,7 @@ class SmartCommandsHarmonyHub:
                     self.command_map[label_key]["device"] = fncn["action"]["deviceId"]
 
         operations.append(self._get_activities_payload(activities))
-        operations.append(self._get_commands_payload(commands))
+        operations.append(self._get_commands_payload(set(commands)))
         payload = {"operations": operations}
         return json.dumps(payload)
 
