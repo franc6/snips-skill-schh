@@ -114,7 +114,7 @@ def power_on(hermes, intent_message):
 def which_activity(hermes, intent_message):
     """Handles intent for changing the volume"""
 
-    (activity_id, activity_name) = hermes.skill.current_activity():
+    (activity_id, activity_name) = hermes.skill.current_activity()
     hermes.publish_end_session(intent_message.session_id,
         "The Harmony Hub is running the {} activity.".format(activity_name))
 
