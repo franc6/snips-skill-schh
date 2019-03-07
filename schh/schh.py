@@ -173,7 +173,7 @@ class SmartCommandsHarmonyHub:
             return -2
 
         activities = [x for x in self.config["activity"] if x["label"] == activity_name]
-        if activities:
+        if not activities:
             print("Cannot find the activity: {} ".format(activity_name))
             return -3
         activity = activities[0]
