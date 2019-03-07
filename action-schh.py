@@ -111,6 +111,13 @@ def power_on(hermes, intent_message):
         sentence = "I failed to started the {} activity on the Harmony Hub.".format(activity)
     hermes.publish_end_session(intent_message.session_id, sentence)
 
+def which_activity(hermes, intent_message):
+    """Handles intent for changing the volume"""
+
+    (activity_id, activity_name) = hermes.skill.current_activity():
+    hermes.publish_end_session(intent_message.session_id,
+        "The Harmony Hub is running the {} activity.".format(activity_name))
+
 def main(hermes):
     """main function"""
     config = read_configuration_file(CONFIG_INI)
@@ -122,6 +129,7 @@ def main(hermes):
           .subscribe_intent("franc:harmony_hub_send_command", send_command) \
           .subscribe_intent("franc:harmony_hub_power_on", power_on) \
           .subscribe_intent("franc:harmony_hub_change_channel", change_channel) \
+          .subscribe_intent("franc:harmony_hub_which_activity", which_activity) \
           .loop_forever()
 
     print("loop_forever returned!")
