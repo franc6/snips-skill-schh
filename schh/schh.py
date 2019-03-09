@@ -58,6 +58,8 @@ class SmartCommandsHarmonyHub:
         return ["addFromVanilla", {"harmony_hub_activities_name": activities}]
 
     def _get_update_payload(self):
+        """ Finds all the commands and returns a payload for injecting
+        commands """
         operations = []
         activities = []
         commands = []
@@ -94,6 +96,7 @@ class SmartCommandsHarmonyHub:
         return json.dumps(payload)
 
     def _label_to_key_and_voice_command(self, label, activity):
+        """ Return the key for command_map for the given label and activity"""
         if label == "0":
             label = "zero"
         elif label == "1":
@@ -165,6 +168,18 @@ class SmartCommandsHarmonyHub:
             self.harmony.send_command(mapped_command["device"], mapped_command["command"], 0.1)
         self._close()
         return 1
+
+    def list_activites(self):
+        """Returns a list of activities"""
+        if not self._connect():
+            return False
+
+        activities = []
+        for x in self.config["activity"]:
+            activities.append(x["label"])
+
+        self._close()
+        return activities
 
     def current_activity(self):
         """Returns the ID and name of the current activity"""

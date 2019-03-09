@@ -34,7 +34,7 @@ def _send_command(hermes, intent_message, which_command, repeat):
             "I could not determine what command to send to the Harmony Hub.")
 
 def change_channel(hermes, intent_message):
-    """Handles intent for changing the volume"""
+    """Handles intent for changing the channel"""
     channel_slot = None
     repeat = 1
     if intent_message.slots is not None:
@@ -111,8 +111,23 @@ def power_on(hermes, intent_message):
         sentence = "I failed to started the {} activity on the Harmony Hub.".format(activity)
     hermes.publish_end_session(intent_message.session_id, sentence)
 
+def list_activities(hermes, intent_message):
+    """Handles intent for listing activities"""
+
+    activities = hermes.skill.list_activities()
+    if activities is False:
+        sentence = "I could not determine the activities available on the Harmony Hub."
+    elif len(activities) == 0:
+        sentence = "There are no activities available on the Harmony Hub."
+    else:
+        sentence = "The activities available on the Harmony Hub are:"
+        for activity in activities:
+            sentence += " " + activity
+
+    hermes.publish_end_session(intent_message.session_id, sentence)
+
 def which_activity(hermes, intent_message):
-    """Handles intent for changing the volume"""
+    """Handles intent for listing which activity is current"""
 
     (activity_id, activity_name) = hermes.skill.current_activity()
     hermes.publish_end_session(intent_message.session_id,
@@ -129,6 +144,7 @@ def main(hermes):
           .subscribe_intent("franc:harmony_hub_send_command", send_command) \
           .subscribe_intent("franc:harmony_hub_power_on", power_on) \
           .subscribe_intent("franc:harmony_hub_change_channel", change_channel) \
+          .subscribe_intent("franc:harmony_hub_list_activities", list_activities) \
           .subscribe_intent("franc:harmony_hub_which_activity", which_activity) \
           .loop_forever()
 
