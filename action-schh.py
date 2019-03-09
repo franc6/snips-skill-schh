@@ -120,9 +120,10 @@ def list_activities(hermes, intent_message):
     elif len(activities) == 0:
         sentence = "There are no activities available on the Harmony Hub."
     else:
-        sentence = "The activities available on the Harmony Hub are:"
+        sentence = "The activities available on the Harmony Hub are"
         for activity in activities:
-            sentence += " " + activity
+            sentence += ". " + activity
+        sentence += "."
 
     hermes.publish_end_session(intent_message.session_id, sentence)
 
