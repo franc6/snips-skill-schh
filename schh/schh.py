@@ -169,7 +169,7 @@ class SmartCommandsHarmonyHub:
         self._close()
         return 1
 
-    def list_activites(self):
+    def list_activities(self):
         """Returns a list of activities"""
         if not self._connect():
             return False
