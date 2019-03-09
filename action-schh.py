@@ -122,7 +122,7 @@ def list_activities(hermes, intent_message):
     else:
         sentence = "The activities available on the Harmony Hub are"
         for activity in activities:
-            sentence += ". " + activity
+            sentence += ",,. " + activity
         sentence += "."
 
     hermes.publish_end_session(intent_message.session_id, sentence)
