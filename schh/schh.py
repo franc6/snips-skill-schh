@@ -69,7 +69,17 @@ class SmartCommandsHarmonyHub:
                     (label_key, voice_command) = self._label_to_key_and_voice_command(fncn["label"], activity["id"])
                     commands.append(voice_command)
                     self.command_map[label_key] = {}
+                    # Initialize command to fncn["name"], in case we
+                    # can't find better
                     self.command_map[label_key]["command"] = fncn["name"]
+                    # Find better...
+                    idx = fncn["action"].find("command")
+                    if idx != -1:
+                        idx += 10
+                        ridx = fncn["action"].find("\"", idx)
+                        if ridx != -1:
+                            self.command_map[label_key]["command"] = fncn["action"][idx:ridx]
+                    # Next, find the device to use
                     ridx = fncn["action"].rfind("\"")
                     idx = fncn["action"].find("deviceId")
                     if idx == -1:
