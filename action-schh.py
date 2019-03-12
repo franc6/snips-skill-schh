@@ -46,9 +46,13 @@ def change_channel(hermes, intent_message):
             "I did not change the channel with the Harmony Hub.")
         return
 
-    if not hermes.skill.change_channel(channel_slot):
+    ret = hermes.skill.change_channel(channel_slot)
+    if ret == -1:
         hermes.publish_end_session(intent_message.session_id,
             "I could not connect to the Harmony Hub.")
+    elif ret == 0:
+        hermes.publish_end_session(intent_message.session_id,
+            "I could not change the channel with the Harmony Hub.")
 
 def change_volume(hermes, intent_message):
     """Handles intent for changing the volume"""
@@ -115,8 +119,8 @@ def list_activities(hermes, intent_message):
     """Handles intent for listing activities"""
 
     activities = hermes.skill.list_activities()
-    if activities is False:
-        sentence = "I could not determine the activities available on the Harmony Hub."
+    if isinstance(activities, int) and activities == -1:
+        sentence = "I could not connect to the Harmony Hub."
     elif len(activities) == 0:
         sentence = "There are no activities available on the Harmony Hub."
     else:
@@ -130,7 +134,10 @@ def list_activities(hermes, intent_message):
 def which_activity(hermes, intent_message):
     """Handles intent for listing which activity is current"""
 
-    (activity_id, activity_name) = hermes.skill.current_activity()
+    ret_value = hermes.skill.current_activity()
+    if isinstance(ret_value, int) and ret_value == -1:
+        sentence = "I could not connect to the Harmony Hub."
+    (activity_id, activity_name) = ret_value
     hermes.publish_end_session(intent_message.session_id,
         "The Harmony Hub is running the {} activity.".format(activity_name))
 

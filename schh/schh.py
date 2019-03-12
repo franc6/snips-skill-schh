@@ -152,10 +152,10 @@ class SmartCommandsHarmonyHub:
                 which_channel += str(sub_channel)
 
         if not self._connect():
-            return False
-        self.harmony.change_channel(which_channel)
+            return -1
+        retValue = self.harmony.change_channel(which_channel)
         self._close()
-        return True
+        return 1 if retValue else 0
 
     def send_command(self, command, repeat):
         """Sends command to the Harmony Hub repeat times"""
@@ -172,7 +172,7 @@ class SmartCommandsHarmonyHub:
     def list_activities(self):
         """Returns a list of activities"""
         if not self._connect():
-            return False
+            return -1
 
         activities = []
         for x in self.config["activity"]:
@@ -184,7 +184,7 @@ class SmartCommandsHarmonyHub:
     def current_activity(self):
         """Returns the ID and name of the current activity"""
         if not self._connect():
-            return False
+            return -1
         return_values = (self.activity_id, self.activity_name)
         self._close()
         return return_values
@@ -216,7 +216,7 @@ class SmartCommandsHarmonyHub:
     def inject_activities(self):
         """Injects the list of activities known to the Harmony Hub"""
         if not self._connect():
-            return False
+            return -1
         payload = self._get_update_payload() + "\n"
         pipe = Popen(["/usr/bin/mosquitto_pub",
                       "-t",
@@ -228,6 +228,6 @@ class SmartCommandsHarmonyHub:
                      stderr=STDOUT)
         pipe.communicate(input=payload.encode("utf-8"))
         self._close()
-        return True
+        return 1
 
 __all__ = ["SmartCommandsHarmonyHub"]
