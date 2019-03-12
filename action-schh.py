@@ -25,6 +25,7 @@ def read_configuration_file(file_name):
         return dict()
 
 def _send_command(hermes, intent_message, which_command, repeat):
+    print("_send_command: ", which_command, repeat)
     ret = hermes.skill.send_command(which_command, repeat)
     if ret == -1:
         hermes.publish_end_session(intent_message.session_id,
