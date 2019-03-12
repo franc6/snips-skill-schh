@@ -3,7 +3,7 @@
 import configparser
 from hermes_python.hermes import Hermes
 from hermes_python.ontology import *
-from schh.schh import SmartCommandsHarmonyHub
+from schh.schhaio import SmartCommandsHarmonyHub
 
 CONFIG_INI = "config.ini"
 CONFIG_ENCODING = "utf-8"
