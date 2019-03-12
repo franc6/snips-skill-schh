@@ -95,13 +95,11 @@ def power_on(hermes, intent_message):
         if intent_message.slots.activity:
             activity = intent_message.slots.activity[0].slot_value.value.value
 
-    print("Received power_on intent")
     if activity is None:
         hermes.publish_end_session(intent_message.session_id,
             "I did not start an activity on the Harmony Hub.")
         return
 
-    print("Starting activity: {}".format(activity))
     ret = hermes.skill.start_activity(activity)
     if ret == 1:
         sentence = "I started the {} activity on the Harmony Hub.".format(activity)
@@ -157,6 +155,7 @@ def main(hermes):
           .loop_forever()
 
     print("loop_forever returned!")
+    hermes.skill.close()
 
 if __name__ == "__main__":
     with Hermes("localhost:1883") as h:
