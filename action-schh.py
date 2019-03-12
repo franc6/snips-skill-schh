@@ -26,10 +26,10 @@ def read_configuration_file(file_name):
 
 def _send_command(hermes, intent_message, which_command, repeat):
     ret = hermes.skill.send_command(which_command, repeat)
-    if ret == 0:
+    if ret == -1:
         hermes.publish_end_session(intent_message.session_id,
             "I could not connect to the Harmony Hub.")
-    elif ret == -1:
+    elif ret == 0:
         hermes.publish_end_session(intent_message.session_id,
             "I could not determine what command to send to the Harmony Hub.")
 
