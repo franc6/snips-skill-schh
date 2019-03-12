@@ -153,9 +153,9 @@ class SmartCommandsHarmonyHub:
 
         if not self._connect():
             return -1
-        retValue = self.harmony.change_channel(which_channel)
+        ret_value = self.harmony.change_channel(which_channel)
         self._close()
-        return 1 if retValue else 0
+        return 1 if ret_value else 0
 
     def send_command(self, command, repeat):
         """Sends command to the Harmony Hub repeat times"""
@@ -229,5 +229,9 @@ class SmartCommandsHarmonyHub:
         pipe.communicate(input=payload.encode("utf-8"))
         self._close()
         return 1
+
+    def close(self):
+        self._close()
+        return
 
 __all__ = ["SmartCommandsHarmonyHub"]
