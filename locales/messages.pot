@@ -1,0 +1,74 @@
+# Messages for snips-skill-schh
+# Copyright (C) 2019
+# Thomas J. Francis, Jr., 2019.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: snips-skill-schh 1.0\n"
+"POT-Creation-Date: 2019-03-12 19:51-0400\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: pygettext.py 1.5\n"
+
+
+#: action-schh.py:37 action-schh.py:58 action-schh.py:113 action-schh.py:127
+#: action-schh.py:143
+msgid "FAILED_CONNECT"
+msgstr ""
+
+#: action-schh.py:40
+msgid "COMMAND_NOT_FOUND"
+msgstr ""
+
+#: action-schh.py:52
+msgid "NO_CHANNEL_GIVEN"
+msgstr ""
+
+#: action-schh.py:61
+msgid "FAILED_CHANGE_CHANNEL"
+msgstr ""
+
+#: action-schh.py:75
+msgid "NO_VOLUME_GIVEN"
+msgstr ""
+
+#: action-schh.py:92
+msgid "NO_COMMAND_GIVEN"
+msgstr ""
+
+#: action-schh.py:106
+msgid "NO_ACTIVITY_GIVEN"
+msgstr ""
+
+#: action-schh.py:111
+msgid "STARTED_ACTIVITY"
+msgstr ""
+
+#: action-schh.py:115
+msgid "ACTIVITY_ALREADY_STARTED"
+msgstr ""
+
+#: action-schh.py:117
+msgid "ACTIVITY_UNKNOWN"
+msgstr ""
+
+#: action-schh.py:119
+msgid "FAILED_START_ACTIVITY"
+msgstr ""
+
+#: action-schh.py:129
+msgid "NO_ACTIVITES_ON_HUB"
+msgstr ""
+
+#: action-schh.py:134
+msgid "ACTIVITIES_LIST"
+msgstr ""
+
+#: action-schh.py:146
+msgid "CURRENT_ACTIVITY"
+msgstr ""
+

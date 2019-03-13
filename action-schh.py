@@ -1,9 +1,15 @@
 #!/usr/bin/env python3
 """Snips skill action for Harmony Hub"""
 import configparser
+import gettext
+import locale
 from hermes_python.hermes import Hermes
 from hermes_python.ontology import *
 from schh.schhaio import SmartCommandsHarmonyHub
+
+locale.setlocale(locale.LC_ALL, '')
+gettext.bindtextdomain('messages', 'locales')
+gettext = gettext.gettext
 
 CONFIG_INI = "config.ini"
 CONFIG_ENCODING = "utf-8"
@@ -29,10 +35,10 @@ def _send_command(hermes, intent_message, which_command, repeat):
     ret = hermes.skill.send_command(which_command, repeat)
     if ret == -1:
         hermes.publish_end_session(intent_message.session_id,
-            "I could not connect to the Harmony Hub.")
+            gettext("FAILED_CONNECT"))
     elif ret == 0:
         hermes.publish_end_session(intent_message.session_id,
-            "I could not determine what command to send to the Harmony Hub.")
+            gettext("COMMAND_NOT_FOUND"))
 
 def change_channel(hermes, intent_message):
     """Handles intent for changing the channel"""
@@ -44,16 +50,16 @@ def change_channel(hermes, intent_message):
 
     if channel_slot is None:
         hermes.publish_end_session(intent_message.session_id,
-            "I did not change the channel with the Harmony Hub.")
+            gettext("NO_CHANNEL_GIVEN"))
         return
 
     ret = hermes.skill.change_channel(channel_slot)
     if ret == -1:
         hermes.publish_end_session(intent_message.session_id,
-            "I could not connect to the Harmony Hub.")
+            gettext("FAILED_CONNECT"))
     elif ret == 0:
         hermes.publish_end_session(intent_message.session_id,
-            "I could not change the channel with the Harmony Hub.")
+            gettext("FAILED_CHANGE_CHANNEL"))
 
 def change_volume(hermes, intent_message):
     """Handles intent for changing the volume"""
@@ -67,7 +73,7 @@ def change_volume(hermes, intent_message):
 
     if which_command is None:
         hermes.publish_end_session(intent_message.session_id,
-            "I did not change the volume with the Harmony Hub.")
+            gettext("NO_VOLUME_GIVEN"))
         return
 
     _send_command(hermes, intent_message, which_command, repeat)
@@ -84,7 +90,7 @@ def send_command(hermes, intent_message):
 
     if which_command is None:
         hermes.publish_end_session(intent_message.session_id,
-            "I did not send a command to the Harmony Hub.")
+            gettext("NO_COMMAND_GIVEN"))
         return
 
     _send_command(hermes, intent_message, which_command, repeat)
@@ -98,20 +104,20 @@ def power_on(hermes, intent_message):
 
     if activity is None:
         hermes.publish_end_session(intent_message.session_id,
-            "I did not start an activity on the Harmony Hub.")
+            gettext("NO_ACTIVITY_GIVEN"))
         return
 
     ret = hermes.skill.start_activity(activity)
     if ret == 1:
-        sentence = "I started the {} activity on the Harmony Hub.".format(activity)
+        sentence = gettext("STARTED_ACTIVITY").format(activity=activity)
     elif ret == -1:
-        sentence = "I could not connect to the Harmony Hub."
+        sentence = gettext("FAILED_CONNECT"))
     elif ret == -2:
-        sentence = "The {} activity is already started on the Harmony Hub.".format(activity)
+        sentence = gettext("ACTIVITY_ALREADY_STARTED").format(activity=activity)
     elif ret == -3:
-        sentence = "I don't know how to start the {} activity.".format(activity)
+        sentence = gettext("ACTIVITY_UNKNOWN").format(activity=activity)
     else:
-        sentence = "I failed to started the {} activity on the Harmony Hub.".format(activity)
+        sentence = gettext("FAILED_START_ACTIVITY").format(activity=activity)
     hermes.publish_end_session(intent_message.session_id, sentence)
 
 def list_activities(hermes, intent_message):
@@ -119,14 +125,14 @@ def list_activities(hermes, intent_message):
 
     activities = hermes.skill.list_activities()
     if isinstance(activities, int) and activities == -1:
-        sentence = "I could not connect to the Harmony Hub."
+        sentence = gettext("FAILED_CONNECT"))
     elif len(activities) == 0:
-        sentence = "There are no activities available on the Harmony Hub."
+        sentence = gettext("NO_ACTIVITIES_ON_HUB")
     else:
-        sentence = "The activities available on the Harmony Hub are"
+        act_sentence = ''
         for activity in activities:
-            sentence += ",,. " + activity
-        sentence += "."
+            act_sentence += ',,.. ' + activity
+        sentence = gettext("ACTIVITIES_LIST").format(activities=act_sentence)
 
     hermes.publish_end_session(intent_message.session_id, sentence)
 
@@ -135,10 +141,11 @@ def which_activity(hermes, intent_message):
 
     ret_value = hermes.skill.current_activity()
     if isinstance(ret_value, int) and ret_value == -1:
-        sentence = "I could not connect to the Harmony Hub."
-    (activity_id, activity_name) = ret_value
-    hermes.publish_end_session(intent_message.session_id,
-        "The Harmony Hub is running the {} activity.".format(activity_name))
+        sentence = gettext("FAILED_CONNECT")
+    else:
+        (activity_id, activity_name) = ret_value
+        sentence = gettext("CURRENT_ACTIVITY").format(activity=activity_name)
+    hermes.publish_end_session(intent_message.session_id, sentence)
 
 def main(hermes):
     """main function"""

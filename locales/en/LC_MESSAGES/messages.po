@@ -1,0 +1,74 @@
+# Messages for snips-skill-schh
+# Copyright (C) 2019
+# Thomas J. Francis, Jr., 2019.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: snips-skill-schh 1.0\n"
+"POT-Creation-Date: 2019-03-12 19:51-0400\n"
+"PO-Revision-Date: 2019-03-12 20:31-0400\n"
+"Last-Translator: Thomas J. Francis, Jr.\n"
+"Language-Team: English\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: pygettext.py 1.5\n"
+
+
+#: action-schh.py:37 action-schh.py:58 action-schh.py:113 action-schh.py:127
+#: action-schh.py:143
+msgid "FAILED_CONNECT"
+msgstr "I could not connect to the Harmony Hub."
+
+#: action-schh.py:40
+msgid "COMMAND_NOT_FOUND"
+msgstr "I could not determine what command to send to the Harmony Hub."
+
+#: action-schh.py:52
+msgid "NO_CHANNEL_GIVEN"
+msgstr "I did not change the channel with the Harmony Hub."
+
+#: action-schh.py:61
+msgid "FAILED_CHANGE_CHANNEL"
+msgstr "I could not change the channel with the Harmony Hub."
+
+#: action-schh.py:75
+msgid "NO_VOLUME_GIVEN"
+msgstr "I did not change the volume with the Harmony Hub."
+
+#: action-schh.py:92
+msgid "NO_COMMAND_GIVEN"
+msgstr "I did not send a command to the Harmony Hub."
+
+#: action-schh.py:106
+msgid "NO_ACTIVITY_GIVEN"
+msgstr "I did not start an activity on the Harmony Hub."
+
+#: action-schh.py:111
+msgid "STARTED_ACTIVITY"
+msgstr "I started the {activity} activity on the Harmony Hub."
+
+#: action-schh.py:115
+msgid "ACTIVITY_ALREADY_STARTED"
+msgstr "The {activity} activity is already started on the Harmony Hub."
+
+#: action-schh.py:117
+msgid "ACTIVITY_UNKNOWN"
+msgstr "I don't know how to start the {activity} activity."
+
+#: action-schh.py:119
+msgid "FAILED_START_ACTIVITY"
+msgstr "I failed to started the {activity} activity on the Harmony Hub."
+
+#: action-schh.py:129
+msgid "NO_ACTIVITES_ON_HUB"
+msgstr "There are no activities available on the Harmony Hub."
+
+#: action-schh.py:134
+msgid "ACTIVITIES_LIST"
+msgstr "The activities available on the Harmony Hub are {activities}."
+
+#: action-schh.py:146
+msgid "CURRENT_ACTIVITY"
+msgstr "The Harmony Hub is running the {activity} activity."
+
