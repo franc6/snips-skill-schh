@@ -1,4 +1,5 @@
 [global]
 [secret]
 remotename=
+control=AIO
 

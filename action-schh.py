@@ -5,7 +5,6 @@ import gettext
 import locale
 from hermes_python.hermes import Hermes
 from hermes_python.ontology import *
-from schh.schhaio import SmartCommandsHarmonyHub
 
 locale.setlocale(locale.LC_ALL, '')
 gettext.bindtextdomain('messages', 'locales')
@@ -150,6 +149,10 @@ def which_activity(hermes, intent_message):
 def main(hermes):
     """main function"""
     config = read_configuration_file(CONFIG_INI)
+    if config["secret"]["control"] == "XMPP":
+        from schh.schh import SmartCommandsHarmonyHub
+    else:
+        from schh.schhaio import SmartCommandsHarmonyHub
     hermes.skill = SmartCommandsHarmonyHub(config["secret"]["remotename"])
 
     hermes.skill.inject_activities()
