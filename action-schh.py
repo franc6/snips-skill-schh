@@ -133,6 +133,7 @@ def list_activities(hermes, intent_message):
             act_sentence += ',,.. ' + activity
         sentence = gettext("ACTIVITIES_LIST").format(activities=act_sentence)
 
+    print(sentence)
     hermes.publish_end_session(intent_message.session_id, sentence)
 
 def which_activity(hermes, intent_message):
