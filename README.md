@@ -1,4 +1,4 @@
-#snips-skill-schh
+# snips-skill-schh
 Snips skill for interacting with a Harmony Hub as a remote control for
 an entertainment system.
 
@@ -8,7 +8,7 @@ command should be sent, as that will be determined based on your Harmony
 Hub configuration.
 
 
-##What can I do with it?
+## What can I do with it?
 * Start an activity on the Harmony Hub
 * Change the channel directly, including to digital TV channels
 * Send commands to the appropriate device via the Harmony Hub
@@ -19,7 +19,7 @@ Hub configuration.
 See examples in my Harmony Hub app for snips.
 
 
-##Configuration Notes
+## Configuration Notes
 All configuration is done in config.ini, in the "secret" section.
 
 Name | Value
@@ -28,7 +28,7 @@ remotename | The name or IP address of your Harmony Hub
 control    | "XMPP" or "AIO", indicates which control style to use
 
 
-##Technical Notes
+## Technical Notes
 For now, use of XMPP is more reliable than AIO.  There are some bad
 interactions between hermes-python and asyncio.  I'm still trying to
 correct it without making it too slow to be useful.
