@@ -110,7 +110,7 @@ def power_on(hermes, intent_message):
     if ret == 1:
         sentence = gettext("STARTED_ACTIVITY").format(activity=activity)
     elif ret == -1:
-        sentence = gettext("FAILED_CONNECT"))
+        sentence = gettext("FAILED_CONNECT")
     elif ret == -2:
         sentence = gettext("ACTIVITY_ALREADY_STARTED").format(activity=activity)
     elif ret == -3:
@@ -124,7 +124,7 @@ def list_activities(hermes, intent_message):
 
     activities = hermes.skill.list_activities()
     if isinstance(activities, int) and activities == -1:
-        sentence = gettext("FAILED_CONNECT"))
+        sentence = gettext("FAILED_CONNECT")
     elif len(activities) == 0:
         sentence = gettext("NO_ACTIVITIES_ON_HUB")
     else:
