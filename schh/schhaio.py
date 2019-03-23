@@ -189,21 +189,21 @@ class SmartCommandsHarmonyHub:
 
         return self._run_in_loop(partial(self._change_channel, which_channel))
 
-    async def _send_command(self, command, repeat, api):
+    async def _send_command(self, command, repeat, delay, api):
         mapped_command = self._map_command(command)
         if mapped_command is None:
             return 0
         send_commands = []
         for _ in range(repeat):
-            send_commands.append(SendCommandDevice(device=mapped_command["device"], command=mapped_command["command"], delay=0.1))
+            send_commands.append(SendCommandDevice(device=mapped_command["device"], command=mapped_command["command"], delay=delay))
         if len(send_commands) == 0:
             return 0
         await api.send_commands(send_commands)
         return 1
 
-    def send_command(self, command, repeat):
+    def send_command(self, command, repeat, delay=0.1):
         """Sends command to the Harmony Hub repeat times"""
-        return self._run_in_loop(partial(self._send_command, command, repeat))
+        return self._run_in_loop(partial(self._send_command, command, repeat, delay))
 
     async def _list_activities(self, _):
         activities = []

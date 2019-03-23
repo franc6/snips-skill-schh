@@ -29,9 +29,9 @@ def read_configuration_file(file_name):
     except (IOError, configparser.Error):
         return dict()
 
-def _send_command(hermes, intent_message, which_command, repeat):
-    print("_send_command: ", which_command, repeat)
-    ret = hermes.skill.send_command(which_command, repeat)
+def _send_command(hermes, intent_message, which_command, repeat, delay=0.1):
+    print("_send_command: ", which_command, repeat, delay)
+    ret = hermes.skill.send_command(which_command, repeat, delay)
     if ret == -1:
         hermes.publish_end_session(intent_message.session_id,
             gettext("FAILED_CONNECT"))
@@ -76,6 +76,9 @@ def change_volume(hermes, intent_message):
         return
 
     _send_command(hermes, intent_message, which_command, repeat)
+
+def channel_surf(hermes, intent_message)
+    _send_command(hermes, intent_message, "ChannelUp", 40, 8)
 
 def send_command(hermes, intent_message):
     """Handles intent for sending a command"""

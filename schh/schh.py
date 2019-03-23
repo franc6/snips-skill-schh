@@ -157,7 +157,7 @@ class SmartCommandsHarmonyHub:
         self._close()
         return 1 if ret_value else 0
 
-    def send_command(self, command, repeat):
+    def send_command(self, command, repeat, delay=0.1):
         """Sends command to the Harmony Hub repeat times"""
         if not self._connect():
             return -1
@@ -165,7 +165,7 @@ class SmartCommandsHarmonyHub:
         if mapped_command is None:
             return 0
         for _ in range(repeat):
-            self.harmony.send_command(mapped_command["device"], mapped_command["command"], 0.1)
+            self.harmony.send_command(mapped_command["device"], mapped_command["command"], delay)
         self._close()
         return 1
 
