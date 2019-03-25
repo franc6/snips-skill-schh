@@ -77,7 +77,7 @@ def change_volume(hermes, intent_message):
 
     _send_command(hermes, intent_message, which_command, repeat)
 
-def channel_surf(hermes, intent_message)
+def channel_surf(hermes, intent_message):
     _send_command(hermes, intent_message, "ChannelUp", 40, 8)
 
 def send_command(hermes, intent_message):
