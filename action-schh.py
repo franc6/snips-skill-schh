@@ -27,6 +27,7 @@ class SCHHActions(HermesSnipsApp):
     @intent('franc:harmony_hub_change_channel')
     def change_channel(self, hermes, intent_message):
         """Handles intent for changing the channel"""
+        print("change_channel intent called")
         channel_slot = None
         repeat = 1
         if intent_message.slots is not None:
@@ -49,6 +50,7 @@ class SCHHActions(HermesSnipsApp):
     @intent('franc:harmony_hub_volume')
     def change_volume(self, hermes, intent_message):
         """Handles intent for changing the volume"""
+        print("change_volume intent called")
         which_command = None
         repeat = 1
         if intent_message.slots is not None:
@@ -71,6 +73,7 @@ class SCHHActions(HermesSnipsApp):
     @intent('franc:harmony_hub_send_command')
     def send_command(self, hermes, intent_message):
         """Handles intent for sending a command"""
+        print("send_command intent called")
         which_command = None
         repeat = 1
         if intent_message.slots is not None:
@@ -89,6 +92,7 @@ class SCHHActions(HermesSnipsApp):
     @intent('franc:harmony_hub_power_on')
     def power_on(self, hermes, intent_message):
         """Handles intent for power on (starting an activity)"""
+        print("power_on intent called")
         activity = None
         if intent_message.slots is not None:
             if intent_message.slots.activity:
@@ -115,6 +119,7 @@ class SCHHActions(HermesSnipsApp):
     @intent('franc:harmony_hub_list_activities')
     def list_activities(self, hermes, intent_message):
         """Handles intent for listing activities"""
+        print("list_activities intent called")
 
         activities = self.skill.list_activities()
         if isinstance(activities, int) and activities == -1:
@@ -133,6 +138,7 @@ class SCHHActions(HermesSnipsApp):
     @intent('franc:harmony_hub_which_activity')
     def which_activity(self, hermes, intent_message):
         """Handles intent for listing which activity is current"""
+        print("which_activities intent called")
 
         ret_value = self.skill.current_activity()
         if isinstance(ret_value, int) and ret_value == -1:
