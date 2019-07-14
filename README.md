@@ -1,4 +1,6 @@
 # snips-skill-schh
+[![License](https://img.shields.io/github/license/franc6/snips-skill-schh.svg)](https://github.com/franc6/snips-skill-schh/blob/master/LICENSE)
+
 Snips skill for interacting with a Harmony Hub as a remote control for
 an entertainment system.
 
