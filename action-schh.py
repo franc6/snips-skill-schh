@@ -14,7 +14,7 @@ gettext = gettext.gettext
 class SCHHActions(HermesSnipsApp):
     skill = False
 
-    def _send_command(hermes, intent_message, which_command, repeat, delay=0.1):
+    def _send_command(self, hermes, intent_message, which_command, repeat, delay=0.1):
         print("self._send_command: ", which_command, repeat, delay)
         ret = self.skill.send_command(which_command, repeat, delay)
         if ret == -1:
@@ -67,7 +67,7 @@ class SCHHActions(HermesSnipsApp):
         self._send_command(hermes, intent_message, which_command, repeat)
 
     @intent('franc:harmony_hub_channel_surf')
-    def channel_surf(hermes, intent_message):
+    def channel_surf(self, hermes, intent_message):
         self._send_command(hermes, intent_message, "ChannelUp", 40, 8)
 
     @intent('franc:harmony_hub_send_command')
