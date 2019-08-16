@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import datetime
+import json
 import sys
 from threading import Thread
 from time import sleep
@@ -45,9 +46,14 @@ def power_off(skill):
 if __name__ == '__main__':
     start_time = datetime.datetime.now()
     skill = SmartCommandsHarmonyHub(MY_HUB)
-    # Note that inject_activities must be called.  If it causes problems,
-    # just disable the code in it that invokes mosquitto_pub
-    skill.inject_activities()
+    # This only sets up the injection request, it doesn't actually do any injection!
+    payload = skill.get_injection_payload()
+    if payload is None:
+        print("Failed to create injection payload!")
+    else: 
+        print("Injection payload:")
+        for operation in payload.operations:
+            json.dumps(operation.values, indent=1)
 
     t1 = Thread(target=list_activities, args=(skill,))
     t1.start()

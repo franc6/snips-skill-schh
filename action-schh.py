@@ -2,6 +2,7 @@
 """Snips skill action for Harmony Hub"""
 import gettext
 import locale
+from subprocess import Popen, PIPE, STDOUT
 
 from snipskit.hermes.apps import HermesSnipsApp
 from snipskit.config import AppConfig
@@ -29,7 +30,6 @@ class SCHHActions(HermesSnipsApp):
         """Handles intent for changing the channel"""
         print("change_channel intent called")
         channel_slot = None
-        repeat = 1
         if intent_message.slots is not None:
             if intent_message.slots.channel_number:
                 channel_slot = str(intent_message.slots.channel_number[0].slot_value.value.value)
@@ -144,9 +144,13 @@ class SCHHActions(HermesSnipsApp):
         if isinstance(ret_value, int) and ret_value == -1:
             sentence = gettext("FAILED_CONNECT")
         else:
-            (activity_id, activity_name) = ret_value
+            (_, activity_name) = ret_value
             sentence = gettext("CURRENT_ACTIVITY").format(activity=activity_name)
         hermes.publish_end_session(intent_message.session_id, sentence)
+
+    def inject_activities(self):
+        payload = self.skill.get_injection_payload()
+        self.hermes.request_injection(payload)
 
     def initialize(self):
         if self.config["secret"]["control"] == "XMPP":
@@ -155,7 +159,7 @@ class SCHHActions(HermesSnipsApp):
             from schh.schhaio import SmartCommandsHarmonyHub
         self.skill = SmartCommandsHarmonyHub(self.config["secret"]["remotename"])
 
-        self.skill.inject_activities()
+        self.inject_activities()
 
 if __name__ == "__main__":
     SCHHActions(config=AppConfig())

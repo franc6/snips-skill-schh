@@ -1,7 +1,6 @@
 """Provides SmartCommandsHarmonyHub for smarter interaction with a HarmonyHub"""
-import json
-from subprocess import Popen, PIPE, STDOUT
 from pyharmony import client as harmony_client
+from hermes_python.ontology.injection import (InjectionRequestMessage, AddFromVanillaInjectionRequest)
 
 class SmartCommandsHarmonyHub:
     """Class for interacting with a Harmony Hub in a smarter way"""
@@ -52,10 +51,10 @@ class SmartCommandsHarmonyHub:
         return "."
 
     def _get_commands_payload(self, commands):
-        return ["addFromVanilla", {"harmony_hub_command": commands}]
+        return AddFromVanillaInjectionRequest({"harmony_hub_command": commands})
 
     def _get_activities_payload(self, activities):
-        return ["addFromVanilla", {"harmony_hub_activities_name": activities}]
+        return AddFromVanillaInjectionRequest({"harmony_hub_activities_name": activities})
 
     def _get_update_payload(self):
         """ Finds all the commands and returns a payload for injecting
@@ -92,8 +91,7 @@ class SmartCommandsHarmonyHub:
 
         operations.append(self._get_activities_payload(activities))
         operations.append(self._get_commands_payload(list(set(commands))))
-        payload = {"operations": operations}
-        return json.dumps(payload)
+        return InjectionRequestMessage(operations)
 
     def _label_to_key_and_voice_command(self, label, activity):
         """ Return the key for command_map for the given label and activity"""
@@ -213,22 +211,11 @@ class SmartCommandsHarmonyHub:
         """Sets the current activity of the Harmony Hub to -1, AKA "PowerOff"."""
         return self.start_activity("PowerOff")
 
-    def inject_activities(self):
+    def get_injection_payload(self):
         """Injects the list of activities known to the Harmony Hub"""
         if not self._connect():
-            return -1
-        payload = self._get_update_payload() + "\n"
-        pipe = Popen(["/usr/bin/mosquitto_pub",
-                      "-t",
-                      "hermes/injection/perform",
-                      "-l"
-                     ],
-                     stdin=PIPE,
-                     stdout=PIPE,
-                     stderr=STDOUT)
-        pipe.communicate(input=payload.encode("utf-8"))
-        self._close()
-        return 1
+            return None 
+        return self._get_update_payload()
 
     def close(self):
         self._close()

@@ -1,12 +1,11 @@
 """Provides SmartCommandsHarmonyHub for smarter interaction with a HarmonyHub"""
 import asyncio
 from functools import partial
-import json
-from subprocess import Popen, PIPE, STDOUT
 from threading import Thread
 
 from aioharmony.harmonyapi import HarmonyAPI
 from aioharmony.const import SendCommandDevice
+from hermes_python.ontology.injection import (InjectionRequestMessage, AddFromVanillaInjectionRequest)
 
 class SmartCommandsHarmonyHub:
     """Class for interacting with a Harmony Hub in a smarter way"""
@@ -73,10 +72,10 @@ class SmartCommandsHarmonyHub:
         return "."
 
     def _get_commands_payload(self, commands):
-        return ["addFromVanilla", {"harmony_hub_command": commands}]
+        return AddFromVanillaInjectionRequest({"harmony_hub_command": commands})
 
     def _get_activities_payload(self, activities):
-        return ["addFromVanilla", {"harmony_hub_activities_name": activities}]
+        return AddFromVanillaInjectionRequest({"harmony_hub_activities_name": activities})
 
     async def _get_update_payload(self, _):
         """ Finds all the commands and returns a payload for injecting
@@ -113,8 +112,7 @@ class SmartCommandsHarmonyHub:
 
         operations.append(self._get_activities_payload(activities))
         operations.append(self._get_commands_payload(list(set(commands))))
-        payload = {"operations": operations}
-        return json.dumps(payload)
+        return InjectionRequestMessage(operations)
 
     def _label_to_key_and_voice_command(self, label, activity):
         """ Return the key for command_map for the given label and activity"""
@@ -245,22 +243,12 @@ class SmartCommandsHarmonyHub:
         """Sets the current activity of the Harmony Hub to -1, AKA "PowerOff"."""
         return self.start_activity("PowerOff")
 
-    def inject_activities(self):
+    def get_injection_payload(self):
         """Injects the list of activities known to the Harmony Hub"""
         payload = self._run_in_loop(partial(self._get_update_payload))
         if payload == -1:
-            return -1
-        payload = payload + "\n"
-        pipe = Popen(["/usr/bin/mosquitto_pub",
-                      "-t",
-                      "hermes/injection/perform",
-                      "-l"
-                     ],
-                     stdin=PIPE,
-                     stdout=PIPE,
-                     stderr=STDOUT)
-        pipe.communicate(input=payload.encode("utf-8"))
-        return 1
+            return None
+        return payload
 
     def close(self):
         future = asyncio.run_coroutine_threadsafe(
