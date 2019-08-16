@@ -148,11 +148,9 @@ class SCHHActions(HermesSnipsApp):
             sentence = gettext("CURRENT_ACTIVITY").format(activity=activity_name)
         hermes.publish_end_session(intent_message.session_id, sentence)
 
-    def inject_activities(self):
-        payload = self.skill.get_injection_payload()
-        self.hermes.request_injection(payload)
-
     def initialize(self):
+        """Initialization; determine which type of connection to use, create the object, and inject activities"""
+        print("Inside SCHHActions.initialize")
         if self.config["secret"]["control"] == "XMPP":
             from schh.schh import SmartCommandsHarmonyHub
         else:
@@ -165,6 +163,10 @@ class SCHHActions(HermesSnipsApp):
 
         if isinstance(self.skill, bool):
             print("self.skill is now a bool?!")
+
+    def inject_activities(self):
+        payload = self.skill.get_injection_payload()
+        self.hermes.request_injection(payload)
 
 
 if __name__ == "__main__":
