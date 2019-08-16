@@ -156,16 +156,15 @@ class SCHHActions(HermesSnipsApp):
         else:
             from schh.schhaio import SmartCommandsHarmonyHub
         self.skill = SmartCommandsHarmonyHub(self.config["secret"]["remotename"])
-        if isinstance(self.skill, bool):
-            print("Could not create SmartCommandsHarmonyHub!")
-
+        print("Calling self.inject_activities")
         self.inject_activities()
+        print("returned from self.inject_activities")
 
-        if isinstance(self.skill, bool):
-            print("self.skill is now a bool?!")
 
     def inject_activities(self):
+        print("Calling self.skill.get_injection_payload")
         payload = self.skill.get_injection_payload()
+        print("Calling self.hermes.request_injection")
         self.hermes.request_injection(payload)
 
 
