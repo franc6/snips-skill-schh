@@ -144,7 +144,7 @@ class SCHHActions(HermesSnipsApp):
         if isinstance(ret_value, int) and ret_value == -1:
             sentence = gettext("FAILED_CONNECT")
         else:
-            (_, activity_name) = ret_value
+            (activity_id, activity_name) = ret_value
             sentence = gettext("CURRENT_ACTIVITY").format(activity=activity_name)
         hermes.publish_end_session(intent_message.session_id, sentence)
 
@@ -158,6 +158,8 @@ class SCHHActions(HermesSnipsApp):
         else:
             from schh.schhaio import SmartCommandsHarmonyHub
         self.skill = SmartCommandsHarmonyHub(self.config["secret"]["remotename"])
+        if type(self.skill) is bool:
+            print("Could not create SmartCommandsHarmonyHub!")
 
         self.inject_activities()
 
