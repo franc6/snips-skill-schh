@@ -165,10 +165,10 @@ class SCHHActions(HermesSnipsApp):
         print("Calling self.skill.get_injection_payload")
         payload = self.skill.get_injection_payload()
         if not payload:
+            print("Failed to get payload for injection!")
+        else:
             print("Calling self.hermes.request_injection")
             self.hermes.request_injection(payload)
-        else:
-            print("Failed to get payload for injection!")
 
 
 if __name__ == "__main__":
