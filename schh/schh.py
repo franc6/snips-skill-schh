@@ -34,7 +34,7 @@ class SmartCommandsHarmonyHub:
             self.harmony = harmony_client.create_and_connect_client(self.remote_address, 5222)
             if not self.harmony:
                 self.harmony = None
-                print("Failed to connect to Harmony Hub!")
+                print("Failed to connect to Harmony Hub!: " + self.remote_address)
                 return False
             self.config = self.harmony.get_config()
             self.activity_id = self.harmony.get_current_activity()
@@ -43,7 +43,7 @@ class SmartCommandsHarmonyHub:
                 self.activity_name = activity["label"]
             return True
         except Error as e:
-            print("Caught exception while connecting!")
+            print("Caught exception while connecting to Harmony Hub!")
             print(e)
         return False
 
