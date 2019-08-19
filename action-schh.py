@@ -65,10 +65,12 @@ class SCHHActions(HermesSnipsApp):
             return
 
         self._send_command(hermes, intent_message, which_command, repeat)
+        hermes.publish_end_session(intent_message.session_id, "")
 
     @intent('franc:harmony_hub_channel_surf')
     def channel_surf(self, hermes, intent_message):
         self._send_command(hermes, intent_message, "ChannelUp", 40, 8)
+        hermes.publish_end_session(intent_message.session_id, "")
 
     @intent('franc:harmony_hub_send_command')
     def send_command(self, hermes, intent_message):
@@ -88,6 +90,7 @@ class SCHHActions(HermesSnipsApp):
             return
 
         self._send_command(hermes, intent_message, which_command, repeat)
+        hermes.publish_end_session(intent_message.session_id, "")
 
     @intent('franc:harmony_hub_power_on')
     def power_on(self, hermes, intent_message):
