@@ -33,4 +33,6 @@ control    | "XMPP" or "AIO", indicates which control style to use
 ## Technical Notes
 For now, use of XMPP is more reliable than AIO.  There are some bad
 interactions between hermes-python and asyncio.  I'm still trying to
-correct it without making it too slow to be useful.
+correct it without making it too slow to be useful
+
+[![Buy me some pizza](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/qpunYPZx5)
