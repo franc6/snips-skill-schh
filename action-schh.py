@@ -2,7 +2,6 @@
 """Snips skill action for Harmony Hub"""
 import gettext
 import locale
-import os
 from subprocess import Popen, PIPE, STDOUT
 
 from snipskit.hermes.apps import HermesSnipsApp
@@ -158,7 +157,6 @@ class SCHHActions(HermesSnipsApp):
             from schh.schh import SmartCommandsHarmonyHub
         else:
             from schh.schhaio import SmartCommandsHarmonyHub
-        print("hassio_token: {}".format(os.environ['HASSIO_TOKEN']))
         self.skill = SmartCommandsHarmonyHub(self.config["secret"]["remotename"])
         self.inject_activities()
 
